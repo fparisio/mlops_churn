@@ -1,5 +1,13 @@
-"""Summary
 """
+A test suite for the customer_churn script
+----------------------------
+
+Author: Francesco Parisio
+Date: August 2022
+Contact: francesco.parisio@protonmail.com
+"""
+
+
 import os
 import logging
 import churn_library as cls
@@ -293,6 +301,8 @@ class TestEDA(object):
 
         return eda.plot_heatmap()
 
+
+class TestSequentialEDA(object):
     def test_run_sequential_eda(self, input_df):
         """test the plot of the data frame heatmap
 

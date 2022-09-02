@@ -1,6 +1,16 @@
-"""Summary
 """
-# library doc string
+churn_library: A script to predict customer churn
+=====
+It provides
+  1. An comprehensive EDA
+  2. A pipeline to train and save two ML models for customer churn
+----------------------------
+
+Author: Francesco Parisio
+Date: August 2022
+Contact: francesco.parisio@protonmail.com
+"""
+
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,8 +19,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
 import joblib
-import shap
 import numpy as np
 
 sns.set()
@@ -23,29 +33,29 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 def import_data(pth):
     """returns dataframe for the csv found at pth
 
-    Args:
-        pth: path to the input data
+    Parameters
+    ----------
+    pth : str
+        path to the input data
 
-    Returns:
-        df: dataframe of input data
+    Returns
+    -------
+    data : pandas.DataFrame
+        dataframe of input data
 
     """
     # Read csv
-    df = pd.read_csv(pth)
+    data = pd.read_csv(pth)
 
     # Assign churn variables
-    df['Churn'] = df['Attrition_Flag'].apply(
+    data['Churn'] = data['Attrition_Flag'].apply(
         lambda val: 0 if val == "Existing Customer" else 1)
 
-    return df
+    return data
 
 
 class PerformEDA():
-    """A class to perform the EDA
-
-    Attributes:
-        df (pandas.DataFrame): input for the EDA
-    """
+    """A class to perform the EDA"""
 
     def __init__(self, df):
         """Summary
@@ -58,46 +68,81 @@ class PerformEDA():
     def plot_histogram(self, variable):
         """plot histogram of churn
 
-        Args:
-            variable (str): name of the column to plot 
+        Parameters
+        ----------
+        variable : str
+            name of the column to plot
+        variable : str
+            name of the column to plot
             the histogram
 
-        Returns:
-            Figure: figure object
+        Returns
+        -------
+        fig : plt.figure
+            figure object
+
         """
         fig, ax = plt.subplots()
         self.df[variable].hist(ax=ax)
-        plt.savefig("./images/eda/" + variable + "churn.png", dpi=500)
+
+        fig.tight_layout()
+
+        plt.savefig("./images/eda/" + variable + ".png", dpi=500)
+
         return fig
 
     def plot_count_marital_status(self):
         """plot value count of marital status
 
-        Returns:
-            Figure: figure object
+        Parameters
+        ----------
+
+        Returns
+        -------
+        fig: plt.figure
+            figure object
+
         """
         fig, ax = plt.subplots()
         self.df["Marital_Status"].value_counts(
             'normalize').plot(kind='bar', ax=ax)
+
+        fig.tight_layout()
+
         plt.savefig("./images/eda/marital_status.png", dpi=500)
         return fig
 
     def plot_heatmap(self):
         """plot value count of marital status
 
-        Returns:
-            Figure: figure object
+        Parameters
+        ----------
+
+        Returns
+        -------
+        fig: plt.figure
+            figure object
+
         """
         fig, ax = plt.subplots()
         sns.heatmap(self.df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
+
+        fig.tight_layout()
+
         plt.savefig("./images/eda/heatmap.png", dpi=500)
         return fig
 
     def run_sequential_eda(self):
         """A function to sequentially execute all plots
 
-        Returns:
-            bool: Execution status
+        Parameters
+        ----------
+
+        Returns
+        -------
+        bool
+            Execution status
+
         """
         self.plot_histogram("Churn")
         self.plot_histogram("Customer_Age")
@@ -109,15 +154,10 @@ class PerformEDA():
 
 
 class Pipeline():
-    """A class to perform the feature engineering
-
-    Attributes:
-        df (pandas.DataFrame): input for the EDA
-    """
+    """A class to perform the feature engineering"""
 
     def __init__(self, df, category_lst, col_to_keep):
-        """Summary
-
+        """
         Args:
             df (pandas.DataFrame): input for the EDA
         """
@@ -129,13 +169,22 @@ class Pipeline():
         """helper function to turn each categorical column into a new column with
         propotion of churn for each category
 
-        Args:
-            df (pandas.DataFrame): pandas dataframe
-            category_lst (list): columns that contain categorical features
-            response (str): string of response name [optional argument that could be used for naming variables or index y column]
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            pandas dataframe
+        category_lst : list
+            columns that contain categorical features
+        response : str
+            string of response name [optional argument that
+             could be used for naming variables
+              or index y column] (Default value = "Churn")
 
-        Returns:
-            pandas.DataFrame: new columns for analyses    
+        Returns
+        -------
+        pandas.DataFrame
+            new columns for analyses
+
         """
         for i in self.category_lst:
             # encoded column
@@ -150,32 +199,37 @@ class Pipeline():
         return self.df[self.col_to_keep]
 
     def perform_feature_engineering(self, split_ratio, response=""):
+        """Function to pefrom feature engineering on the data
+
+        Parameters
+        ----------
+        split_ratio: float
+            split ration between training and testings
+        response: str
+            string of response name [optional argument that
+            could be used for naming variables or index y column]
+
+
+        Returns
+        -------
+            X_train: pandas.DataFrame
+                X training data
+            X_test: pandas.DataFrame
+                X testing data
+            y_train: pandas.DataFrame
+                y training data
+            y_test: pandas.DataFrame
+                y testing data
+
         """
-        input:
-            df: pandas dataframe
-            response: string of response name [optional argument that could be used for naming variables or index y column]
 
-        output:
-            X_train: X training data
-            X_test: X testing data
-            y_train: y training data
-            y_test: y testing data
+        df_encoded = self.encoder_helper()
 
-        Args:
-            df: param response:
-            response (TYPE): Description
-            response
-
-        No Longer Returned:
-
-        """
-        self.df_encoded = self.encoder_helper()
-
-        self.y_labels = self.df_encoded.pop("Churn")
-        self.X_features = self.df_encoded
+        y_labels = df_encoded.pop("Churn")
+        X_features = df_encoded
 
         X_train, X_test, y_train, y_test = train_test_split(
-            self.X_features, self.y_labels, test_size=split_ratio, random_state=42)
+            X_features, y_labels, test_size=split_ratio, random_state=42)
 
         return X_train, X_test, y_train, y_test
 
@@ -186,81 +240,80 @@ class Pipeline():
                                     y_train_preds_rf,
                                     y_test_preds_lr,
                                     y_test_preds_rf):
-        """produces classification report for training and testing results and stores report as image
+        """produces classification report for training
+         and testing results and stores report as image
         in images folder
 
-        input:
-            y_train: training response values
-            y_test:  test response values
-            y_train_preds_lr: training predictions from logistic regression
-            y_train_preds_rf: training predictions from random forest
-            y_test_preds_lr: test predictions from logistic regression
-            y_test_preds_rf: test predictions from random forest
+        Parameters
+        ----------
+        y_train: pandas.Series
+            training response values
+        y_test: pandas.Series
+            test response values
+        y_train_preds_lr: numpy.ndarray
+            training predictions from logistic regression
+        y_train_preds_rf: numpy.ndarray
+            training predictions from random forest
+        y_test_preds_lr: numpy.ndarray
+            test predictions from logistic regression
+        y_test_preds_rf: numpy.ndarray
+            test predictions from random forest
 
-        output:
-            None
-
-        Args:
-            y_train: param y_test:
-            y_test: param y_train_preds_rf:
-            y_train_preds_lr: param y_train_preds_rf:
-            y_train_preds_rf (TYPE): Description
-            y_test_preds_lr: param y_test_preds_rf:
-            y_test_preds_rf: param y_train_preds_rf:
-            y_train_preds_rf
-
-        No Longer Returned:
+        Returns
+        -------
 
         """
+
         # Classification report for random forest
         fig, ax = plt.subplots()
-        ax.rc('figure', figsize=(5, 5))
+        plt.rc('figure', figsize=(5, 5))
         ax.text(0.01, 1.25, str('Random Forest Train'), {
                 'fontsize': 10}, fontproperties='monospace')
         ax.text(0.01, 0.05, str(classification_report(y_test, y_test_preds_rf)), {
-                'fontsize': 10}, fontproperties='monospace')  # approach improved by OP -> monospace!
+                'fontsize': 10}, fontproperties='monospace')
+        # approach improved by OP -> monospace!
         ax.text(0.01, 0.6, str('Random Forest Test'), {
                 'fontsize': 10}, fontproperties='monospace')
         ax.text(0.01, 0.7, str(classification_report(y_train, y_train_preds_rf)), {
-                'fontsize': 10}, fontproperties='monospace')  # approach improved by OP -> monospace!
+                'fontsize': 10}, fontproperties='monospace')
+        # approach improved by OP -> monospace!
         ax.axis('off')
         fig.tight_layout()
         plt.savefig("./images/results/classification_report_rf.png", dpi=500)
 
         # Classification report for logistic regression
         fig, ax = plt.subplots()
-        ax.rc('figure', figsize=(5, 5))
+        plt.rc('figure', figsize=(5, 5))
         ax.text(0.01, 1.25, str('Logistic Regression Train'),
                 {'fontsize': 10}, fontproperties='monospace')
         ax.text(0.01, 0.05, str(classification_report(y_train, y_train_preds_lr)), {
-                'fontsize': 10}, fontproperties='monospace')  # approach improved by OP -> monospace!
+                'fontsize': 10}, fontproperties='monospace')
+        # approach improved by OP -> monospace!
         ax.text(0.01, 0.6, str('Logistic Regression Test'), {
                 'fontsize': 10}, fontproperties='monospace')
         ax.text(0.01, 0.7, str(classification_report(y_test, y_test_preds_lr)), {
-                'fontsize': 10}, fontproperties='monospace')  # approach improved by OP -> monospace!
-        ax.set_axis('off')
+                'fontsize': 10}, fontproperties='monospace')
+        # approach improved by OP -> monospace!
+        ax.axis('off')
         fig.tight_layout()
         plt.savefig("./images/results/classification_report_lr.png", dpi=500)
 
     def feature_importance_plot(self, model, X_data, output_pth):
         """creates and stores the feature importances in pth
 
-        input:
-            model: model object containing feature_importances_
-            X_data: pandas dataframe of X values
-            output_pth: path to store the figure
+        Parameters
+        ----------
+        model: sklearn.ensemble._forest.RandomForestClassifier
+            model object containing feature_importances_
+        X_data: pandas.DataFrame
+            pandas dataframe of X values
+        output_pth: str
+            path to store the figure
 
-        output:
-            None
-
-        Args:
-            model: param X_data:
-            X_data (TYPE): Description
-            output_pth: param X_data:
-            X_data
-
-        No Longer Returned:
-
+        Returns
+        -------
+        Figure: plt.figure
+            figure object
         """
 
         # Calculate feature importances
@@ -296,23 +349,19 @@ class Pipeline():
     def train_models(self, X_train, X_test, y_train, y_test, retrain=False):
         """train, store model results: images + scores, and store models
 
-        input:
-            X_train: X training data
-            X_test: X testing data
-            y_train: y training data
-            y_test: y testing data
+        Parameters
+        ----------
+        X_train: pandas.DataFrame
+            X training data
+        X_test: pandas.DataFrame
+            X testing data
+        y_train: pandas.DataFrame
+            y training data
+        y_test: pandas.DataFrame
+            y testing data
 
-        output:
-            None
-
-
-        No Longer Returned:
-
-        Args:
-            X_train (TYPE): Description
-            X_test (TYPE): Description
-            y_train (TYPE): Description
-            y_test (TYPE): Description
+        Returns
+        -------
 
         """
         # grid search
@@ -341,15 +390,64 @@ class Pipeline():
         rfc_model = joblib.load('./models/rfc_model.pkl')
         lr_model = joblib.load('./models/logistic_model.pkl')
 
-        self.y_train_preds_rf = rfc_model.predict(X_train)
-        self.y_test_preds_rf = rfc_model.predict(X_test)
+        y_train_preds_rf = rfc_model.predict(X_train)
+        y_test_preds_rf = rfc_model.predict(X_test)
 
-        self.y_train_preds_lr = lr_model.predict(X_train)
-        self.y_test_preds_lr = lr_model.predict(X_test)
+        y_train_preds_lr = lr_model.predict(X_train)
+        y_test_preds_lr = lr_model.predict(X_test)
+
+        return y_train_preds_rf, y_test_preds_rf, y_train_preds_lr, y_test_preds_lr
 
 
-def main(categorical_features, features_to_keep):
-    """main execution funciton"""
+def main():
+    """main execution function
+    TBD: use a parser for cmd line arguments
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+
+    """
+
+    # parameters
+    # features representing a category
+    categories = [
+        'Gender',
+        'Education_Level',
+        'Marital_Status',
+        'Income_Category',
+        'Card_Category'
+    ]
+
+    # features to keep in the final pipeline
+    final_features = [
+        'Customer_Age',
+        'Dependent_count',
+        'Months_on_book',
+        'Total_Relationship_Count',
+        'Months_Inactive_12_mon',
+        'Contacts_Count_12_mon',
+        'Credit_Limit',
+        'Total_Revolving_Bal',
+        'Avg_Open_To_Buy',
+        'Total_Amt_Chng_Q4_Q1',
+        'Total_Trans_Amt',
+        'Total_Trans_Ct',
+        'Total_Ct_Chng_Q4_Q1',
+        'Avg_Utilization_Ratio',
+        'Gender_Churn',
+        'Education_Level_Churn',
+        'Marital_Status_Churn',
+        'Income_Category_Churn',
+        'Card_Category_Churn',
+        'Churn'
+    ]
+
+    # bool variable to whether or not retrain the model
+    retrain = False
+
     # load data
     df = import_data("./data/bank_data.csv")
 
@@ -358,14 +456,15 @@ def main(categorical_features, features_to_keep):
     eda.run_sequential_eda()
 
     # build pipeline
-    model_pipeline = Pipeline(df, categorical_features, features_to_keep)
+    model_pipeline = Pipeline(df, categories, final_features)
 
     # feature engineering
     X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(
         0.3)
 
     # train models
-    model_pipeline.train_models(X_train, X_test, y_train, y_test)
+    y_train_preds_lr, y_train_preds_rf, y_test_preds_lr, y_test_preds_rf = model_pipeline.train_models(
+        X_train, X_test, y_train, y_test, retrain)
 
     rfc_model_ = joblib.load('./models/rfc_model.pkl')
 
@@ -374,17 +473,12 @@ def main(categorical_features, features_to_keep):
 
     model_pipeline.classification_report_image(y_train,
                                                y_test,
-                                               model_pipeline.y_train_preds_lr,
-                                               model_pipeline.y_train_preds_rf,
-                                               model_pipeline.y_test_preds_lr,
-                                               model_pipeline.y_test_preds_rf)
+                                               y_train_preds_lr,
+                                               y_train_preds_rf,
+                                               y_test_preds_lr,
+                                               y_test_preds_rf)
 
 
 if __name__ == "__main__":
 
-    CATEGORIES = ['Gender', 'Education_Level',
-                  'Marital_Status', 'Income_Category', 'Card_Category']
-    FINAL_FEATURES = ['Customer_Age', 'Dependent_count', 'Months_on_book', 'Total_Relationship_Count', 'Months_Inactive_12_mon', 'Contacts_Count_12_mon', 'Credit_Limit', 'Total_Revolving_Bal', 'Avg_Open_To_Buy', 'Total_Amt_Chng_Q4_Q1',
-                      'Total_Trans_Amt', 'Total_Trans_Ct', 'Total_Ct_Chng_Q4_Q1', 'Avg_Utilization_Ratio', 'Gender_Churn', 'Education_Level_Churn', 'Marital_Status_Churn', 'Income_Category_Churn', 'Card_Category_Churn', 'Churn']
-
-    main(CATEGORIES, FINAL_FEATURES)
+    main()
