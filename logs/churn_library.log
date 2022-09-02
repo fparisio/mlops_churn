@@ -1,9 +1,0 @@
-root - INFO - Testing import_data: SUCCESS
-numexpr.utils - INFO - NumExpr defaulting to 4 threads.
-root - INFO - Testing run_eda: SUCCESS
-root - INFO - Testing category_list: SUCCESS
-root - INFO - Testing data_split: SUCCESS
-root - INFO - Testing data_split: SUCCESS
-root - INFO - Testing create_models: SUCCESS
-root - INFO - Testing rfc creation: SUCCESS
-root - INFO - Testing lr creation: SUCCESS

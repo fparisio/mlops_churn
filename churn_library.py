@@ -223,13 +223,13 @@ class Pipeline():
 
         """
 
-        df_encoded = self.encoder_helper()
+        self.df_encoded = self.encoder_helper()
 
-        y_labels = df_encoded.pop("Churn")
-        X_features = df_encoded
+        self.y_labels = self.df_encoded.pop("Churn")
+        self.X_features = self.df_encoded
 
         X_train, X_test, y_train, y_test = train_test_split(
-            X_features, y_labels, test_size=split_ratio, random_state=42)
+            self.X_features, self.y_labels, test_size=split_ratio, random_state=42)
 
         return X_train, X_test, y_train, y_test
 
@@ -390,13 +390,11 @@ class Pipeline():
         rfc_model = joblib.load('./models/rfc_model.pkl')
         lr_model = joblib.load('./models/logistic_model.pkl')
 
-        y_train_preds_rf = rfc_model.predict(X_train)
-        y_test_preds_rf = rfc_model.predict(X_test)
+        self.y_train_preds_rf = rfc_model.predict(X_train)
+        self.y_test_preds_rf = rfc_model.predict(X_test)
 
-        y_train_preds_lr = lr_model.predict(X_train)
-        y_test_preds_lr = lr_model.predict(X_test)
-
-        return y_train_preds_rf, y_test_preds_rf, y_train_preds_lr, y_test_preds_lr
+        self.y_train_preds_lr = lr_model.predict(X_train)
+        self.y_test_preds_lr = lr_model.predict(X_test)
 
 
 def main():
@@ -413,7 +411,7 @@ def main():
 
     # parameters
     # features representing a category
-    categories = [
+    CATEGORIES = [
         'Gender',
         'Education_Level',
         'Marital_Status',
@@ -422,7 +420,7 @@ def main():
     ]
 
     # features to keep in the final pipeline
-    final_features = [
+    FINAL_FEATURES = [
         'Customer_Age',
         'Dependent_count',
         'Months_on_book',
@@ -446,7 +444,7 @@ def main():
     ]
 
     # bool variable to whether or not retrain the model
-    retrain = False
+    RETRAIN = False
 
     # load data
     df = import_data("./data/bank_data.csv")
@@ -456,15 +454,14 @@ def main():
     eda.run_sequential_eda()
 
     # build pipeline
-    model_pipeline = Pipeline(df, categories, final_features)
+    model_pipeline = Pipeline(df, CATEGORIES, FINAL_FEATURES)
 
     # feature engineering
     X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(
         0.3)
 
     # train models
-    y_train_preds_lr, y_train_preds_rf, y_test_preds_lr, y_test_preds_rf = model_pipeline.train_models(
-        X_train, X_test, y_train, y_test, retrain)
+    model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
 
     rfc_model_ = joblib.load('./models/rfc_model.pkl')
 
@@ -473,10 +470,10 @@ def main():
 
     model_pipeline.classification_report_image(y_train,
                                                y_test,
-                                               y_train_preds_lr,
-                                               y_train_preds_rf,
-                                               y_test_preds_lr,
-                                               y_test_preds_rf)
+                                               model_pipeline.y_train_preds_lr,
+                                               model_pipeline.y_train_preds_rf,
+                                               model_pipeline.y_test_preds_lr,
+                                               model_pipeline.y_test_preds_rf)
 
 
 if __name__ == "__main__":
