@@ -27,7 +27,7 @@ sns.set()
 
 
 # import libraries
-os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
 
 def import_data(pth):
@@ -48,13 +48,14 @@ def import_data(pth):
     data = pd.read_csv(pth)
 
     # Assign churn variables
-    data['Churn'] = data['Attrition_Flag'].apply(
-        lambda val: 0 if val == "Existing Customer" else 1)
+    data["Churn"] = data["Attrition_Flag"].apply(
+        lambda val: 0 if val == "Existing Customer" else 1
+    )
 
     return data
 
 
-class PerformEDA():
+class PerformEDA:
     """A class to perform the EDA"""
 
     def __init__(self, df):
@@ -104,8 +105,7 @@ class PerformEDA():
 
         """
         fig, ax = plt.subplots()
-        self.df["Marital_Status"].value_counts(
-            'normalize').plot(kind='bar', ax=ax)
+        self.df["Marital_Status"].value_counts("normalize").plot(kind="bar", ax=ax)
 
         fig.tight_layout()
 
@@ -125,7 +125,7 @@ class PerformEDA():
 
         """
         fig, ax = plt.subplots()
-        sns.heatmap(self.df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
+        sns.heatmap(self.df.corr(), annot=False, cmap="Dark2_r", linewidths=2)
 
         fig.tight_layout()
 
@@ -153,7 +153,7 @@ class PerformEDA():
         return True
 
 
-class Pipeline():
+class Pipeline:
     """A class to perform the feature engineering"""
 
     def __init__(self, df, category_lst, col_to_keep):
@@ -229,17 +229,20 @@ class Pipeline():
         self.X_features = self.df_encoded
 
         X_train, X_test, y_train, y_test = train_test_split(
-            self.X_features, self.y_labels, test_size=split_ratio, random_state=42)
+            self.X_features, self.y_labels, test_size=split_ratio, random_state=42
+        )
 
         return X_train, X_test, y_train, y_test
 
-    def classification_report_image(self,
-                                    y_train,
-                                    y_test,
-                                    y_train_preds_lr,
-                                    y_train_preds_rf,
-                                    y_test_preds_lr,
-                                    y_test_preds_rf):
+    def classification_report_image(
+        self,
+        y_train,
+        y_test,
+        y_train_preds_lr,
+        y_train_preds_rf,
+        y_test_preds_lr,
+        y_test_preds_rf,
+    ):
         """produces classification report for training
          and testing results and stores report as image
         in images folder
@@ -266,35 +269,75 @@ class Pipeline():
 
         # Classification report for random forest
         fig, ax = plt.subplots()
-        plt.rc('figure', figsize=(5, 5))
-        ax.text(0.01, 1.25, str('Random Forest Train'), {
-                'fontsize': 10}, fontproperties='monospace')
-        ax.text(0.01, 0.05, str(classification_report(y_test, y_test_preds_rf)), {
-                'fontsize': 10}, fontproperties='monospace')
+        plt.rc("figure", figsize=(5, 5))
+        ax.text(
+            0.01,
+            1.25,
+            str("Random Forest Train"),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
+        ax.text(
+            0.01,
+            0.05,
+            str(classification_report(y_test, y_test_preds_rf)),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
         # approach improved by OP -> monospace!
-        ax.text(0.01, 0.6, str('Random Forest Test'), {
-                'fontsize': 10}, fontproperties='monospace')
-        ax.text(0.01, 0.7, str(classification_report(y_train, y_train_preds_rf)), {
-                'fontsize': 10}, fontproperties='monospace')
+        ax.text(
+            0.01,
+            0.6,
+            str("Random Forest Test"),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
+        ax.text(
+            0.01,
+            0.7,
+            str(classification_report(y_train, y_train_preds_rf)),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
         # approach improved by OP -> monospace!
-        ax.axis('off')
+        ax.axis("off")
         fig.tight_layout()
         plt.savefig("./images/results/classification_report_rf.png", dpi=500)
 
         # Classification report for logistic regression
         fig, ax = plt.subplots()
-        plt.rc('figure', figsize=(5, 5))
-        ax.text(0.01, 1.25, str('Logistic Regression Train'),
-                {'fontsize': 10}, fontproperties='monospace')
-        ax.text(0.01, 0.05, str(classification_report(y_train, y_train_preds_lr)), {
-                'fontsize': 10}, fontproperties='monospace')
+        plt.rc("figure", figsize=(5, 5))
+        ax.text(
+            0.01,
+            1.25,
+            str("Logistic Regression Train"),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
+        ax.text(
+            0.01,
+            0.05,
+            str(classification_report(y_train, y_train_preds_lr)),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
         # approach improved by OP -> monospace!
-        ax.text(0.01, 0.6, str('Logistic Regression Test'), {
-                'fontsize': 10}, fontproperties='monospace')
-        ax.text(0.01, 0.7, str(classification_report(y_test, y_test_preds_lr)), {
-                'fontsize': 10}, fontproperties='monospace')
+        ax.text(
+            0.01,
+            0.6,
+            str("Logistic Regression Test"),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
+        ax.text(
+            0.01,
+            0.7,
+            str(classification_report(y_test, y_test_preds_lr)),
+            {"fontsize": 10},
+            fontproperties="monospace",
+        )
         # approach improved by OP -> monospace!
-        ax.axis('off')
+        ax.axis("off")
         fig.tight_layout()
         plt.savefig("./images/results/classification_report_lr.png", dpi=500)
 
@@ -329,7 +372,7 @@ class Pipeline():
 
         # Create plot title
         ax.set_title("Feature Importance")
-        ax.set_ylabel('Importance')
+        ax.set_ylabel("Importance")
 
         # Add bars
         ax.bar(range(X_data.shape[1]), importances[indices])
@@ -367,14 +410,15 @@ class Pipeline():
         # grid search
         rfc = RandomForestClassifier(random_state=42)
         # Use a different solver if the default 'lbfgs' fails to converge
-        # Reference: https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
-        lrc = LogisticRegression(solver='lbfgs', max_iter=3000)
+        # Reference:
+        # https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+        lrc = LogisticRegression(solver="lbfgs", max_iter=3000)
 
         param_grid = {
-            'n_estimators': [200, 500],
-            'max_features': ['auto', 'sqrt'],
-            'max_depth': [4, 5, 100],
-            'criterion': ['gini', 'entropy']
+            "n_estimators": [200, 500],
+            "max_features": ["auto", "sqrt"],
+            "max_depth": [4, 5, 100],
+            "criterion": ["gini", "entropy"],
         }
 
         cv_rfc = GridSearchCV(estimator=rfc, param_grid=param_grid, cv=5)
@@ -383,12 +427,12 @@ class Pipeline():
             # fit and dump
             cv_rfc.fit(X_train, y_train)
             lrc.fit(X_train, y_train)
-            joblib.dump(cv_rfc.best_estimator_, './models/rfc_model.pkl')
-            joblib.dump(lrc, './models/logistic_model.pkl')
+            joblib.dump(cv_rfc.best_estimator_, "./models/rfc_model.pkl")
+            joblib.dump(lrc, "./models/logistic_model.pkl")
 
         # load and make predictions
-        rfc_model = joblib.load('./models/rfc_model.pkl')
-        lr_model = joblib.load('./models/logistic_model.pkl')
+        rfc_model = joblib.load("./models/rfc_model.pkl")
+        lr_model = joblib.load("./models/logistic_model.pkl")
 
         self.y_train_preds_rf = rfc_model.predict(X_train)
         self.y_test_preds_rf = rfc_model.predict(X_test)
@@ -412,35 +456,35 @@ def main():
     # parameters
     # features representing a category
     CATEGORIES = [
-        'Gender',
-        'Education_Level',
-        'Marital_Status',
-        'Income_Category',
-        'Card_Category'
+        "Gender",
+        "Education_Level",
+        "Marital_Status",
+        "Income_Category",
+        "Card_Category",
     ]
 
     # features to keep in the final pipeline
     FINAL_FEATURES = [
-        'Customer_Age',
-        'Dependent_count',
-        'Months_on_book',
-        'Total_Relationship_Count',
-        'Months_Inactive_12_mon',
-        'Contacts_Count_12_mon',
-        'Credit_Limit',
-        'Total_Revolving_Bal',
-        'Avg_Open_To_Buy',
-        'Total_Amt_Chng_Q4_Q1',
-        'Total_Trans_Amt',
-        'Total_Trans_Ct',
-        'Total_Ct_Chng_Q4_Q1',
-        'Avg_Utilization_Ratio',
-        'Gender_Churn',
-        'Education_Level_Churn',
-        'Marital_Status_Churn',
-        'Income_Category_Churn',
-        'Card_Category_Churn',
-        'Churn'
+        "Customer_Age",
+        "Dependent_count",
+        "Months_on_book",
+        "Total_Relationship_Count",
+        "Months_Inactive_12_mon",
+        "Contacts_Count_12_mon",
+        "Credit_Limit",
+        "Total_Revolving_Bal",
+        "Avg_Open_To_Buy",
+        "Total_Amt_Chng_Q4_Q1",
+        "Total_Trans_Amt",
+        "Total_Trans_Ct",
+        "Total_Ct_Chng_Q4_Q1",
+        "Avg_Utilization_Ratio",
+        "Gender_Churn",
+        "Education_Level_Churn",
+        "Marital_Status_Churn",
+        "Income_Category_Churn",
+        "Card_Category_Churn",
+        "Churn",
     ]
 
     # bool variable to whether or not retrain the model
@@ -457,23 +501,27 @@ def main():
     model_pipeline = Pipeline(df, CATEGORIES, FINAL_FEATURES)
 
     # feature engineering
-    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(
-        0.3)
+    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(0.3)
 
     # train models
     model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
 
-    rfc_model_ = joblib.load('./models/rfc_model.pkl')
+    rfc_model_ = joblib.load("./models/rfc_model.pkl")
 
     model_pipeline.feature_importance_plot(
-        rfc_model_, model_pipeline.X_features, "./images/results/feature_importances.png")
+        rfc_model_,
+        model_pipeline.X_features,
+        "./images/results/feature_importances.png",
+    )
 
-    model_pipeline.classification_report_image(y_train,
-                                               y_test,
-                                               model_pipeline.y_train_preds_lr,
-                                               model_pipeline.y_train_preds_rf,
-                                               model_pipeline.y_test_preds_lr,
-                                               model_pipeline.y_test_preds_rf)
+    model_pipeline.classification_report_image(
+        y_train,
+        y_test,
+        model_pipeline.y_train_preds_lr,
+        model_pipeline.y_train_preds_rf,
+        model_pipeline.y_test_preds_lr,
+        model_pipeline.y_test_preds_rf,
+    )
 
 
 if __name__ == "__main__":
