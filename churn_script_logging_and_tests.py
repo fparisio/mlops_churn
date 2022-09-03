@@ -111,8 +111,9 @@ def pipeline(input_df, categorical_features, features_to_keep):
     """
 
     Args:
-      input_df(TYPE): Description
-      categorical_features(TYPE): Description
+      input_df(pandas.DataFrame): pytest fixture for the input dataframe
+      categorical_features(str): pytest fixture to pass categorical
+      features
       features_to_keep(TYPE): Description
 
     Returns:
@@ -127,10 +128,11 @@ def feature_engineering(input_df, categorical_features, features_to_keep, split_
     """
 
     Args:
-      input_df(TYPE): Description
-      categorical_features(TYPE): Description
-      features_to_keep(TYPE): Description
-      split_ratio(TYPE): Description
+      input_df(pandas.DataFrame): pytest fixture for the input dataframe
+      categorical_features(str): pytest fixture to pass categorical
+      features
+      features_to_keep(str): pytest fixture to pass final features
+      split_ratio(float): pytest fixture to pass the ratio training-testing
 
     Returns:
 
@@ -148,15 +150,12 @@ class TestImport(object):
         """test data import
 
         Args:
-          input_path(TYPE): Description
-        No Longer Returned:
+          input_path(str): fixture path to input files
 
         Returns:
 
         Raises:
           err: FileNotFoundError to check correct import
-Deleted Parameters:
-          input_df: pytest fixture for the input file path
 
         """
         try:
@@ -201,7 +200,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correck plot of histogram 
 
         """
 
@@ -222,7 +221,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correck plot of histogram 
 
         """
 
@@ -243,7 +242,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correck plot of histogram 
 
         """
 
@@ -264,7 +263,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correck plot of histogram 
 
         """
 
@@ -285,7 +284,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correck heatmap
 
         """
 
@@ -306,7 +305,7 @@ class TestEDA(object):
         Returns:
 
         Raises:
-          err: Description
+          err: TypeError to check correct EDA execution
 
         """
 
@@ -331,16 +330,13 @@ class TestEncoder(object):
         """test encoder helper
 
         Args:
-          pipeline(TYPE): Description
-          features_to_keep(TYPE): Description
+            pipeline(TYPE): Description
+            features_to_keep(str): pytest fixture to pass final features
 
         Returns:
 
         Raises:
-          err: Description
-Deleted Parameters:
-          input_df: Description
-          categorical_features: Description
+          err: AssertionError to check proper categorical variables
 
         """
         encoded_df = pipeline.encoder_helper()
@@ -357,17 +353,11 @@ Deleted Parameters:
 
         Args:
           pipeline(TYPE): Description
-          features_to_keep(TYPE): Description
-          split_ratio(TYPE): Description
-          split_ratio(TYPE): Description
-        perform_feature_engineering
-          No Longer Returned: Deleted Parameters:
-          perform_feature_engineering(TYPE): Description
-
-        Returns:
+            features_to_keep(str): pytest fixture to pass final features
+            split_ratio(float): pytest fixture to pass the ratio training-testing
 
         Raises:
-          err: Description
+          err: AssertionError to check proper feature engineering
 
         """
         xtrain, _, _, _ = pipeline.perform_feature_engineering(split_ratio)
@@ -390,16 +380,12 @@ Deleted Parameters:
 
         Args:
           pipeline(TYPE): Description
-          split_ratio(TYPE): Description
-          split_ratio(TYPE): Description
-        perform_feature_engineering
-          No Longer Returned: Deleted Parameters:
-          perform_feature_engineering(TYPE): Description
-
+          split_ratio(float): pytest fixture to pass the ratio training-testing
+    
         Returns:
 
         Raises:
-          err: Description
+          err: AssertionError to check proper data split
 
         """
         xtrain, xtest, ytrain, ytest = pipeline.perform_feature_engineering(
@@ -454,16 +440,11 @@ class TestModels(object):
 
         Args:
           feature_engineering(TYPE): Description
-          feature_engineering(TYPE): Description
-        train_models
-        No Longer Returned:
-        Deleted Parameters:
-          train_models(TYPE): Description
 
         Returns:
 
         Raises:
-          err: Description
+          err: AssertionError to check proper train of models
 
         """
         xtrain, xtest, ytrain, ytest = feature_engineering
@@ -480,12 +461,12 @@ class TestModels(object):
 
         Args:
           pipeline(TYPE): Description
-          feature_engineering(TYPE): Description
+          features_to_keep(str): pytest fixture to pass final features
 
         Returns:
 
         Raises:
-          err: Description
+          err: AssertionError to check models are generated correctly
 
         """
 
