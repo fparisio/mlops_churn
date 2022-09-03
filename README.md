@@ -44,19 +44,18 @@ Generate files from execution:
 
 ## Running Files
 
-How do you run your files? What should happen when you run your files?
+To generate the data:
+
+`python churn_library.py`
+
+To execute the tests:
+
+`python churn_script_logging_and_tests.py`
 
 To create baseline for images:
 
 `pytest churn_script_logging_and_tests.py --mpl-generate-path=baseline`
 
-the images created are then compared on subsequent runs of `pytest` as 
+the images created are then compared on subsequent test.
 
-`pytest -v churn_script_logging_and_tests.py`
-
-To generate the data, rune
-
-`python churn_library.py`
-
-The default is executed without retraining the two models. To retrain the two models, set the value `RETRAIN = True`
-
+The default is executed without retraining the two models. To retrain the two models, set the value `RETRAIN = True`.

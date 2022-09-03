@@ -33,16 +33,12 @@ os.environ["QT_QPA_PLATFORM"] = "offscreen"
 def import_data(pth):
     """returns dataframe for the csv found at pth
 
-    Parameters
-    ----------
-    pth : str
-        path to the input data
+    Args:
+      pth(str): path to the input data
 
-    Returns
-    -------
-    data : pandas.DataFrame
-        dataframe of input data
+    Returns:
 
+    
     """
     # Read csv
     data = pd.read_csv(pth)
@@ -69,19 +65,14 @@ class PerformEDA:
     def plot_histogram(self, variable):
         """plot histogram of churn
 
-        Parameters
-        ----------
-        variable : str
-            name of the column to plot
-        variable : str
-            name of the column to plot
-            the histogram
+        Args:
+          variable(str): name of the column to plot
+          variable(str): name of the column to plot
+        the histogram
 
-        Returns
-        -------
-        fig : plt.figure
-            figure object
+        Returns:
 
+        
         """
         fig, ax = plt.subplots()
         self.df[variable].hist(ax=ax)
@@ -93,17 +84,7 @@ class PerformEDA:
         return fig
 
     def plot_count_marital_status(self):
-        """plot value count of marital status
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        fig: plt.figure
-            figure object
-
-        """
+        """plot value count of marital status"""
         fig, ax = plt.subplots()
         self.df["Marital_Status"].value_counts("normalize").plot(kind="bar", ax=ax)
 
@@ -113,17 +94,7 @@ class PerformEDA:
         return fig
 
     def plot_heatmap(self):
-        """plot value count of marital status
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        fig: plt.figure
-            figure object
-
-        """
+        """plot value count of marital status"""
         fig, ax = plt.subplots()
         sns.heatmap(self.df.corr(), annot=False, cmap="Dark2_r", linewidths=2)
 
@@ -133,17 +104,7 @@ class PerformEDA:
         return fig
 
     def run_sequential_eda(self):
-        """A function to sequentially execute all plots
-
-        Parameters
-        ----------
-
-        Returns
-        -------
-        bool
-            Execution status
-
-        """
+        """A function to sequentially execute all plots"""
         self.plot_histogram("Churn")
         self.plot_histogram("Customer_Age")
         self.plot_histogram("Total_Trans_Ct")
@@ -169,22 +130,16 @@ class Pipeline:
         """helper function to turn each categorical column into a new column with
         propotion of churn for each category
 
-        Parameters
-        ----------
-        df : pandas.DataFrame
-            pandas dataframe
-        category_lst : list
-            columns that contain categorical features
-        response : str
-            string of response name [optional argument that
-             could be used for naming variables
-              or index y column] (Default value = "Churn")
+        Args:
+          df(pandas.DataFrame): pandas dataframe
+          category_lst(list): columns that contain categorical features
+          response(str, optional): string of response name [optional argument that
+        could be used for naming variables
+        or index y column] (Default value = "Churn")
 
-        Returns
-        -------
-        pandas.DataFrame
-            new columns for analyses
+        Returns:
 
+        
         """
         for i in self.category_lst:
             # encoded column
@@ -201,26 +156,14 @@ class Pipeline:
     def perform_feature_engineering(self, split_ratio, response=""):
         """Function to pefrom feature engineering on the data
 
-        Parameters
-        ----------
-        split_ratio: float
-            split ration between training and testings
-        response: str
-            string of response name [optional argument that
-            could be used for naming variables or index y column]
+        Args:
+          split_ratio(float): split ration between training and testings
+          response(str, optional): string of response name [optional argument that
+        could be used for naming variables or index y column] (Default value = "")
 
+        Returns:
 
-        Returns
-        -------
-            X_train: pandas.DataFrame
-                X training data
-            X_test: pandas.DataFrame
-                X testing data
-            y_train: pandas.DataFrame
-                y training data
-            y_test: pandas.DataFrame
-                y testing data
-
+        
         """
 
         self.df_encoded = self.encoder_helper()
@@ -247,24 +190,17 @@ class Pipeline:
          and testing results and stores report as image
         in images folder
 
-        Parameters
-        ----------
-        y_train: pandas.Series
-            training response values
-        y_test: pandas.Series
-            test response values
-        y_train_preds_lr: numpy.ndarray
-            training predictions from logistic regression
-        y_train_preds_rf: numpy.ndarray
-            training predictions from random forest
-        y_test_preds_lr: numpy.ndarray
-            test predictions from logistic regression
-        y_test_preds_rf: numpy.ndarray
-            test predictions from random forest
+        Args:
+          y_train(pandas.Series): training response values
+          y_test(pandas.Series): test response values
+          y_train_preds_lr(numpy.ndarray): training predictions from logistic regression
+          y_train_preds_rf(numpy.ndarray): training predictions from random forest
+          y_test_preds_lr(numpy.ndarray): test predictions from logistic regression
+          y_test_preds_rf(numpy.ndarray): test predictions from random forest
 
-        Returns
-        -------
+        Returns:
 
+        
         """
 
         # Classification report for random forest
@@ -344,19 +280,14 @@ class Pipeline:
     def feature_importance_plot(self, model, X_data, output_pth):
         """creates and stores the feature importances in pth
 
-        Parameters
-        ----------
-        model: sklearn.ensemble._forest.RandomForestClassifier
-            model object containing feature_importances_
-        X_data: pandas.DataFrame
-            pandas dataframe of X values
-        output_pth: str
-            path to store the figure
+        Args:
+          model(sklearn.ensemble._forest.RandomForestClassifier): model object containing feature_importances_
+          X_data(pandas.DataFrame): pandas dataframe of X values
+          output_pth(str): path to store the figure
 
-        Returns
-        -------
-        Figure: plt.figure
-            figure object
+        Returns:
+
+        
         """
 
         # Calculate feature importances
@@ -392,20 +323,16 @@ class Pipeline:
     def train_models(self, X_train, X_test, y_train, y_test, retrain=False):
         """train, store model results: images + scores, and store models
 
-        Parameters
-        ----------
-        X_train: pandas.DataFrame
-            X training data
-        X_test: pandas.DataFrame
-            X testing data
-        y_train: pandas.DataFrame
-            y training data
-        y_test: pandas.DataFrame
-            y testing data
+        Args:
+          X_train(pandas.DataFrame): X training data
+          X_test(pandas.DataFrame): X testing data
+          y_train(pandas.DataFrame): y training data
+          y_test(pandas.DataFrame): y testing data
+          retrain: (Default value = False)
 
-        Returns
-        -------
+        Returns:
 
+        
         """
         # grid search
         rfc = RandomForestClassifier(random_state=42)
@@ -445,12 +372,11 @@ def main():
     """main execution function
     TBD: use a parser for cmd line arguments
 
-    Parameters
-    ----------
+    Args:
 
-    Returns
-    -------
+    Returns:
 
+    
     """
 
     # parameters
