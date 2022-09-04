@@ -112,9 +112,10 @@ def pipeline(input_df, categorical_features, features_to_keep):
 
     Args:
       input_df(pandas.DataFrame): pytest fixture for the input dataframe
-      categorical_features(str): pytest fixture to pass categorical
-      features
-      features_to_keep(TYPE): Description
+      categorical_features(list): pytest fixture to pass categorical
+    features
+      features_to_keep(list): pytest fixture to of the result of features
+    engineering
 
     Returns:
 
@@ -129,12 +130,16 @@ def feature_engineering(input_df, categorical_features, features_to_keep, split_
 
     Args:
       input_df(pandas.DataFrame): pytest fixture for the input dataframe
-      categorical_features(str): pytest fixture to pass categorical
+      categorical_features(list): pytest fixture to pass categorical
       features
       features_to_keep(str): pytest fixture to pass final features
       split_ratio(float): pytest fixture to pass the ratio training-testing
 
     Returns:
+      X_train(pandas.DataFrame): X training data
+      X_test(pandas.DataFrame): X testing data
+      y_train(pandas.DataFrame): y training data
+      y_test(pandas.DataFrame): y testing data
 
     """
     pipeline = cls.Pipeline(input_df, categorical_features, features_to_keep)
@@ -152,8 +157,6 @@ class TestImport(object):
         Args:
           input_path(str): fixture path to input files
 
-        Returns:
-
         Raises:
           err: FileNotFoundError to check correct import
 
@@ -170,8 +173,6 @@ class TestImport(object):
 
         Args:
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
-
-        Returns:
 
         Raises:
           err: Assertion error to check non-empty dataframe
@@ -198,9 +199,10 @@ class TestEDA(object):
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
 
         Returns:
+           (Fig): figure plot of the histogram of churn
 
         Raises:
-          err: TypeError to check correck plot of histogram 
+          err: TypeError to check correck plot of histogram
 
         """
 
@@ -219,9 +221,10 @@ class TestEDA(object):
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
 
         Returns:
+           (Fig): figure plot of the histogram of age
 
         Raises:
-          err: TypeError to check correck plot of histogram 
+          err: TypeError to check correck plot of histogram
 
         """
 
@@ -240,9 +243,10 @@ class TestEDA(object):
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
 
         Returns:
+           (Fig): figure plot of the histogram of total transactions
 
         Raises:
-          err: TypeError to check correck plot of histogram 
+          err: TypeError to check correck plot of histogram
 
         """
 
@@ -261,9 +265,10 @@ class TestEDA(object):
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
 
         Returns:
+           (Fig): figure plot of the histogram of marital status
 
         Raises:
-          err: TypeError to check correck plot of histogram 
+          err: TypeError to check correck plot of histogram
 
         """
 
@@ -282,6 +287,7 @@ class TestEDA(object):
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
 
         Returns:
+           (Fig): figure plot of the heatmap
 
         Raises:
           err: TypeError to check correck heatmap
@@ -301,8 +307,6 @@ class TestEDA(object):
 
         Args:
           input_df(pandas.DataFrame): pytest fixture for the input dataframe
-
-        Returns:
 
         Raises:
           err: TypeError to check correct EDA execution
@@ -330,10 +334,8 @@ class TestEncoder(object):
         """test encoder helper
 
         Args:
-            pipeline(TYPE): Description
-            features_to_keep(str): pytest fixture to pass final features
-
-        Returns:
+          pipeline(Pipeline): execute the ML training steps sequentially
+          features_to_keep(list): pytest fixture to pass final features
 
         Raises:
           err: AssertionError to check proper categorical variables
@@ -352,9 +354,11 @@ class TestEncoder(object):
         """test perform_feature_engineering
 
         Args:
-          pipeline(TYPE): Description
-            features_to_keep(str): pytest fixture to pass final features
-            split_ratio(float): pytest fixture to pass the ratio training-testing
+          pipeline(Pipeline): execute the ML training steps sequentially
+          features_to_keep(list): pytest fixture to pass final features
+          split_ratio(float): pytest fixture to pass the ratio training-testing
+
+        Returns:
 
         Raises:
           err: AssertionError to check proper feature engineering
@@ -379,9 +383,9 @@ class TestEncoder(object):
         """test perform_feature_engineering
 
         Args:
-          pipeline(TYPE): Description
+          pipeline(Pipeline): execute the ML training steps sequentially
           split_ratio(float): pytest fixture to pass the ratio training-testing
-    
+
         Returns:
 
         Raises:
@@ -439,9 +443,7 @@ class TestModels(object):
         """test train_models
 
         Args:
-          feature_engineering(TYPE): Description
-
-        Returns:
+          feature_engineering(tuple): testing and training data
 
         Raises:
           err: AssertionError to check proper train of models
@@ -460,10 +462,9 @@ class TestModels(object):
         """Summary
 
         Args:
-          pipeline(TYPE): Description
-          features_to_keep(str): pytest fixture to pass final features
-
-        Returns:
+          pipeline(Pipeline): execute the ML training steps sequentially
+          features_to_keep(list): pytest fixture to pass final features
+          feature_engineering(tuple): testing and training data
 
         Raises:
           err: AssertionError to check models are generated correctly

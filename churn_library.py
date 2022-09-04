@@ -38,7 +38,7 @@ def import_data(pth):
 
     Returns:
 
-    
+
     """
     # Read csv
     data = pd.read_csv(pth)
@@ -72,7 +72,7 @@ class PerformEDA:
 
         Returns:
 
-        
+
         """
         fig, ax = plt.subplots()
         self.df[variable].hist(ax=ax)
@@ -86,7 +86,8 @@ class PerformEDA:
     def plot_count_marital_status(self):
         """plot value count of marital status"""
         fig, ax = plt.subplots()
-        self.df["Marital_Status"].value_counts("normalize").plot(kind="bar", ax=ax)
+        self.df["Marital_Status"].value_counts(
+            "normalize").plot(kind="bar", ax=ax)
 
         fig.tight_layout()
 
@@ -115,7 +116,7 @@ class PerformEDA:
 
 
 class Pipeline:
-    """A class to perform the feature engineering"""
+    """A class to perform execute the ML training steps sequentially"""
 
     def __init__(self, df, category_lst, col_to_keep):
         """
@@ -139,7 +140,7 @@ class Pipeline:
 
         Returns:
 
-        
+
         """
         for i in self.category_lst:
             # encoded column
@@ -162,8 +163,11 @@ class Pipeline:
         could be used for naming variables or index y column] (Default value = "")
 
         Returns:
+          X_train(pandas.DataFrame): X training data
+          X_test(pandas.DataFrame): X testing data
+          y_train(pandas.DataFrame): y training data
+          y_test(pandas.DataFrame): y testing data
 
-        
         """
 
         self.df_encoded = self.encoder_helper()
@@ -200,7 +204,7 @@ class Pipeline:
 
         Returns:
 
-        
+
         """
 
         # Classification report for random forest
@@ -287,7 +291,7 @@ class Pipeline:
 
         Returns:
 
-        
+
         """
 
         # Calculate feature importances
@@ -332,7 +336,7 @@ class Pipeline:
 
         Returns:
 
-        
+
         """
         # grid search
         rfc = RandomForestClassifier(random_state=42)
@@ -376,7 +380,7 @@ def main():
 
     Returns:
 
-    
+
     """
 
     # parameters
@@ -427,7 +431,8 @@ def main():
     model_pipeline = Pipeline(df, CATEGORIES, FINAL_FEATURES)
 
     # feature engineering
-    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(0.3)
+    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(
+        0.3)
 
     # train models
     model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
