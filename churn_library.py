@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, plot_roc_curve
 import joblib
 import numpy as np
 
@@ -324,6 +324,39 @@ class Pipeline:
 
         return fig
 
+    def roc_plot(self, models, test_data, output_pth):
+        """creates the ROC plot for the two models
+
+        Args:
+          models(tuple): LR and RF models
+          test_data(tuple): x and y test data
+          output_pth(str): path to store the figure
+
+        Returns:
+
+
+        """
+        # unpack input
+        lr_model, rfc_model = models
+        X_test, y_test = test_data
+
+        # Create plot
+        fig, ax = plt.subplots()
+
+        # plot linear regression
+        lrc_plot = plot_roc_curve(lr_model, X_test, y_test, ax=ax, alpha=0.8)
+
+        # plot random forest
+        rfc_disp = plot_roc_curve(rfc_model, X_test, y_test, ax=ax, alpha=0.8)
+
+        # Layout configure
+        fig.tight_layout()
+
+        # Save output
+        plt.savefig(output_pth, dpi=500)
+
+        return fig
+
     def train_models(self, X_train, X_test, y_train, y_test, retrain=False):
         """train, store model results: images + scores, and store models
 
@@ -437,12 +470,19 @@ def main():
     # train models
     model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
 
+    lr_model_ = joblib.load("./models/logistic_model.pkl")
     rfc_model_ = joblib.load("./models/rfc_model.pkl")
 
     model_pipeline.feature_importance_plot(
         rfc_model_,
         model_pipeline.X_features,
         "./images/results/feature_importances.png",
+    )
+
+    model_pipeline.roc_plot(
+        (lr_model_, rfc_model_),
+        (X_test, y_test),
+        "./images/results/roc_plot.png",
     )
 
     model_pipeline.classification_report_image(
