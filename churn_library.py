@@ -470,21 +470,25 @@ def main():
     # train models
     model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
 
+    # load models
     lr_model_ = joblib.load("./models/logistic_model.pkl")
     rfc_model_ = joblib.load("./models/rfc_model.pkl")
 
+    # build feature importance plot
     model_pipeline.feature_importance_plot(
         rfc_model_,
         model_pipeline.X_features,
         "./images/results/feature_importances.png",
     )
 
+    # build roc plot
     model_pipeline.roc_plot(
         (lr_model_, rfc_model_),
         (X_test, y_test),
         "./images/results/roc_plot.png",
     )
 
+    # build classification report plot
     model_pipeline.classification_report_image(
         y_train,
         y_test,
