@@ -38,6 +38,8 @@ Generate files from execution:
 
  - `/images/results/feature_importances.png`: a plot of feature importances for the random forest model;
 
+ - `/images/results/roc_plot.png`: a plot of the ROC curves for RF and LR models;
+
  - `/models/rfc_model.pkl`: the trained random forest model;
 
  - `/models/logistic_model.pkl`: the trained logistic regression model;
