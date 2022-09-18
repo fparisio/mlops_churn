@@ -1,0 +1,7 @@
+language: python
+python:
+  - "3.8"
+install:
+  - poetry install
+script:
+  - poetry run pytest -v test/churn_script_logging_and_tests.py
