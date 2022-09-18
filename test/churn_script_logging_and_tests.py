@@ -523,4 +523,4 @@ class MyPlugin:
 
 if __name__ == "__main__":
     sys.exit(pytest.main(
-        ["-v", "churn_script_logging_and_tests.py"], plugins=[MyPlugin()]))
+        ["-v", "test/churn_script_logging_and_tests.py"], plugins=[MyPlugin()]))
