@@ -2,6 +2,10 @@
 
 - Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Udacity
 
+<p align="center">
+<img src="images/results/roc_plot.png" width="500" height="500">
+</p>
+
 ## Project Description
 
 The project is a package to predict customer churn. It provides
@@ -46,13 +50,17 @@ Generate files from execution:
 
 ## Running Files
 
+To install the package:
+
+`poetry install`
+
 To generate the data:
 
-`python churn_library.py`
+`poetry run python src/churn_library.py`
 
 To execute the tests:
 
-`python churn_script_logging_and_tests.py`
+`python run pytest -v test/churn_script_logging_and_tests.py`
 
 To create baseline for images:
 
