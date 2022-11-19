@@ -12,16 +12,16 @@ Contact: francesco.parisio@protonmail.com
 """
 
 import os
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import classification_report, plot_roc_curve
+
 import joblib
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import seaborn as sns
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, plot_roc_curve
+from sklearn.model_selection import GridSearchCV, train_test_split
 
 sns.set()
 
@@ -86,8 +86,7 @@ class PerformEDA:
     def plot_count_marital_status(self):
         """plot value count of marital status"""
         fig, ax = plt.subplots()
-        self.df["Marital_Status"].value_counts(
-            "normalize").plot(kind="bar", ax=ax)
+        self.df["Marital_Status"].value_counts("normalize").plot(kind="bar", ax=ax)
 
         fig.tight_layout()
 
@@ -464,8 +463,7 @@ def main():
     model_pipeline = Pipeline(df, CATEGORIES, FINAL_FEATURES)
 
     # feature engineering
-    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(
-        0.3)
+    X_train, X_test, y_train, y_test = model_pipeline.perform_feature_engineering(0.3)
 
     # train models
     model_pipeline.train_models(X_train, X_test, y_train, y_test, RETRAIN)
