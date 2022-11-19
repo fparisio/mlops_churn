@@ -36,7 +36,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: poetry run pylint --rcfile=git-hooks/config/pylint.ini
+        entry: "poetry run pylint --rcfile=git-hooks/config/.pylintrc"
         language: system
         types: [python]
         require_serial: true
