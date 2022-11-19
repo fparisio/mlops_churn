@@ -10,12 +10,13 @@ Date: August 2022
 Contact: francesco.parisio@protonmail.com
 """
 
-import sys
-import math
 import logging
-import pytest
+import math
+import sys
+
 import joblib
 import numpy as np
+import pytest
 
 import src.churn_library as cls
 
@@ -50,13 +51,6 @@ def input_df(input_path):
     """
     input_df = cls.import_data(input_path)
     yield input_df
-
-
-@pytest.fixture(scope="module")
-def perform_eda():
-    """instantiate perform_eda class"""
-    func_perform_eda = cls.perform_eda
-    yield func_perform_eda
 
 
 @pytest.fixture(scope="module")
@@ -143,8 +137,7 @@ def feature_engineering(input_df, categorical_features, features_to_keep, split_
 
     """
     pipeline = cls.Pipeline(input_df, categorical_features, features_to_keep)
-    x_train, x_test, y_train, y_test = pipeline.perform_feature_engineering(
-        split_ratio)
+    x_train, x_test, y_train, y_test = pipeline.perform_feature_engineering(split_ratio)
     yield x_train, x_test, y_train, y_test
 
 
@@ -346,8 +339,7 @@ class TestEncoder(object):
             assert encoded_df.columns.tolist() == features_to_keep
             logging.info("Testing category_list: SUCCESS")
         except AssertionError as err:
-            logging.error(
-                "Testing category_list: the list of features is wrong.")
+            logging.error("Testing category_list: the list of features is wrong.")
             raise err
 
     def test_columns_feature_engineering(self, pipeline, features_to_keep, split_ratio):
@@ -392,15 +384,13 @@ class TestEncoder(object):
           err: AssertionError to check proper data split
 
         """
-        xtrain, xtest, ytrain, ytest = pipeline.perform_feature_engineering(
-            split_ratio)
+        xtrain, xtest, ytrain, ytest = pipeline.perform_feature_engineering(split_ratio)
 
         try:
             assert (
                 xtrain.shape[0]
                 == pytest.approx(
-                    math.floor((1 - split_ratio) *
-                               (xtrain.shape[0] + xtest.shape[0]))
+                    math.floor((1 - split_ratio) * (xtrain.shape[0] + xtest.shape[0]))
                 )
             ) and (
                 xtest.shape[0]
@@ -419,8 +409,7 @@ class TestEncoder(object):
             assert (
                 ytrain.shape[0]
                 == pytest.approx(
-                    math.floor((1 - split_ratio) *
-                               (ytrain.shape[0] + ytest.shape[0]))
+                    math.floor((1 - split_ratio) * (ytrain.shape[0] + ytest.shape[0]))
                 )
             ) and (
                 ytest.shape[0]
@@ -485,8 +474,7 @@ class TestModels(object):
 
         # load reference models
         rfc_model_reference = joblib.load("./models/rfc_model_reference.pkl")
-        lr_model_reference = joblib.load(
-            "./models/logistic_model_reference.pkl")
+        lr_model_reference = joblib.load("./models/logistic_model_reference.pkl")
 
         # compare with reference predictions rfc
         try:
@@ -522,5 +510,8 @@ class MyPlugin:
 
 
 if __name__ == "__main__":
-    sys.exit(pytest.main(
-        ["-v", "test/churn_script_logging_and_tests.py"], plugins=[MyPlugin()]))
+    sys.exit(
+        pytest.main(
+            ["-v", "test/churn_script_logging_and_tests.py"], plugins=[MyPlugin()]
+        )
+    )
