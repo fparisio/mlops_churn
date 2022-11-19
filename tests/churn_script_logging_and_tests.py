@@ -18,7 +18,7 @@ import joblib
 import numpy as np
 import pytest
 
-import src.churn_library as cls
+import ..src.churn_library as cls
 
 # Remove all handlers associated with the root logger object.
 for handler in logging.root.handlers[:]:
