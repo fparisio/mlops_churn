@@ -95,7 +95,7 @@ class PerformEDA:
 
     def plot_heatmap(self):
         """plot value count of marital status"""
-        fig, ax = plt.subplots()
+        fig, _ = plt.subplots()
         sns.heatmap(self.df.corr(), annot=False, cmap="Dark2_r", linewidths=2)
 
         fig.tight_layout()
@@ -153,12 +153,11 @@ class Pipeline:
 
         return self.df[self.col_to_keep]
 
-    def perform_feature_engineering(self, split_ratio, response=""):
+    def perform_feature_engineering(self, split_ratio):
         """Function to pefrom feature engineering on the data
 
         Args:
           split_ratio(float): split ration between training and testings
-          response(str, optional): string of response name [optional argument that
         could be used for naming variables or index y column] (Default value = "")
 
         Returns:
@@ -343,10 +342,10 @@ class Pipeline:
         fig, ax = plt.subplots()
 
         # plot linear regression
-        lrc_plot = plot_roc_curve(lr_model, X_test, y_test, ax=ax, alpha=0.8)
+        plot_roc_curve(lr_model, X_test, y_test, ax=ax, alpha=0.8)
 
         # plot random forest
-        rfc_disp = plot_roc_curve(rfc_model, X_test, y_test, ax=ax, alpha=0.8)
+        plot_roc_curve(rfc_model, X_test, y_test, ax=ax, alpha=0.8)
 
         # Layout configure
         fig.tight_layout()
@@ -356,7 +355,7 @@ class Pipeline:
 
         return fig
 
-    def train_models(self, X_train, X_test, y_train, y_test, retrain=False):
+    def train_models(self, X_train, X_test, y_train, retrain=False):
         """train, store model results: images + scores, and store models
 
         Args:
