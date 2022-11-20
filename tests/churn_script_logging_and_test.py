@@ -460,8 +460,8 @@ class TestModels(object):
 
         """
 
-        xtrain, xtest, ytrain, ytest = feature_engineering
-        pipeline.train_models(xtrain, xtest, ytrain, ytest)
+        xtrain, xtest, ytrain, _ = feature_engineering
+        pipeline.train_models(xtrain, xtest, ytrain)
 
         # check that models were created
         try:
