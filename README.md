@@ -1,3 +1,5 @@
+!\[Example\](https://github.com/fparisio/mlops_churn/actions/workflows/python_app/badge.svg)
+
 # Predict Customer Churn
 
 - Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Udacity
