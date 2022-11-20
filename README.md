@@ -1,4 +1,4 @@
-!\[Example\](https://github.com/fparisio/mlops_churn/actions/workflows/python_app/badge.svg)
+[![CI](https://github.com/fparisio/mlops_churn/actions/workflows/python-app.yml/badge.svg)](https://github.com/fparisio/mlops_churn/actions/workflows/python-app.yml)
 
 # Predict Customer Churn
 
