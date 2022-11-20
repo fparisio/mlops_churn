@@ -55,7 +55,7 @@ ignore-paths=
 # Emacs file locks
 # ignore-patterns=^\.#
 # ignore-patterns=test.*?py
-ignore-patterns=(.)*_test\.py,test_(.)*\.py
+ignore-patterns=(.)*test\.py,test(.)*\.py
 
 
 # List of module names for which member attributes should not be checked
@@ -623,7 +623,8 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 [pylint]
 
 max-line-length=200
-disable=attribute-defined-outside-init, invalid-name, too-many-arguments, too-many-instance-attributes, logging-format-interpolation, consider-using-f-string, logging-fstring-interpolation, too-many-function-args, useless-object-inheritance, too-few-public-methods
+disable=attribute-defined-outside-init, invalid-name
+#, too-many-arguments, too-many-instance-attributes, logging-format-interpolation, consider-using-f-string, logging-fstring-interpolation, too-many-function-args, useless-object-inheritance, too-few-public-methods
 
 [pylint.FORMAT]
 disable=logging-fstring-interpolation
