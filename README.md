@@ -1,3 +1,5 @@
+[![CI](https://github.com/fparisio/mlops_churn/actions/workflows/python-app.yml/badge.svg)](https://github.com/fparisio/mlops_churn/actions/workflows/python-app.yml)
+
 # Predict Customer Churn
 
 - Project **Predict Customer Churn** of ML DevOps Engineer Nanodegree Udacity
