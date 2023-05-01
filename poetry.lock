@@ -147,7 +147,7 @@ plugins = ["setuptools"]
 
 [[package]]
 name = "joblib"
-version = "1.0.1"
+version = "1.1.1"
 description = "Lightweight pipelining with Python functions"
 category = "main"
 optional = false
@@ -559,7 +559,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "18fda46a61354d910bcb0402037df992c6f54768d5ba6b87887b7b4cb36ffcc6"
+content-hash = "cf228552e88534d602449200929169215f46b6afae1147d6d984ace7aacf817f"
 
 [metadata.files]
 astroid = []
